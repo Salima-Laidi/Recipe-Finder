@@ -5,7 +5,7 @@ import prep from "../assets/images/icon-prep-time.svg";
 import cook from "../assets/images/icon-cook-time.svg";
 import bullet from "../assets/images/icon-bullet-point.svg";
 
-function Recipe({recipes}){
+function Recipe({recipes, setSearch}){
     const navigate = useNavigate();
     // to get the id from the url we use useParams hook from react-router-dom, it return string so we need to convert it to number to match the id in the recipes array
     const { id } = useParams();
@@ -14,7 +14,7 @@ function Recipe({recipes}){
     return(
         <div className="md:mx-65 mx-8 py-8">
             <div className="flex justify-start">
-                <span onClick={() => navigate("/recipes")} className="p-3 border border-solid border-neutral-900 rounded-lg hover:cursor-pointer"><MoveLeft className="text-neutral-900 w-3 h-3 md:w-6 md:h-6"/></span>
+                <span onClick={() =>{ navigate("/recipes"); setSearch("")}} className="p-3 border border-solid border-neutral-900 rounded-lg hover:cursor-pointer"><MoveLeft className="text-neutral-900 w-3 h-3 md:w-6 md:h-6"/></span>
             </div>
             <div className=" md:mx-15  flex flex-col md:flex-row gap-8 mt-8">
                 <img src={recipe.image} className="md:w-[500px] md:h-[500px] rounded-lg"/>

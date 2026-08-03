@@ -1,5 +1,4 @@
 import { Search } from "lucide-react";
-import{ useState } from "react";
 import servings from "../assets/images/icon-servings.svg";
 import prep from "../assets/images/icon-prep-time.svg";
 import cook from "../assets/images/icon-cook-time.svg";
@@ -31,29 +30,10 @@ function RecipeCard({recipe}){
 }
 
 
-function Recipes({recipes, loading,error, setSkip}){
-    // const [recipes, setRecipes] = useState([]);
-    // async function fetchRecipes(){
-    //     try{
-    //         const response = await fetch(`https://dummyjson.com/recipes?limit=0`);
-    //         const data = await response.json();
-    //         console.log(data)
-    //         setRecipes(data.recipes);
-    //     }
-    //     catch(error){
-    //         console.log("ERROR", error)
-    //     }
-    // }
-    // useEffect (()=>{
-    //     fetchRecipes();
-    // },[])
+function Recipes({recipes, filteredRecipes, loading,error,currentPage, setCurrentPage, totalPages, search, setSearch}){
     
-    // console.log(recipes)
-    const [search, setSearch] = useState("");
-    const [currentPage, setCurrentPage] = useState(1);
-    const recipesPerPage = 6;
-    const totalPages = Math.ceil(recipes.length/recipesPerPage);
-    setSkip((currentPage - 1) * recipesPerPage);
+    // const [search, setSearch] = useState("");
+    
     function previous(){
         if(currentPage > 1){
             setCurrentPage(currentPage - 1);
@@ -86,9 +66,12 @@ function Recipes({recipes, loading,error, setSkip}){
             )}
 
             <div className="grid md:grid-cols-3 grid-cols-1 gap-8 mb-4">
-                {recipes.filter((recipe)=>{
-                    return recipe.name.toLowerCase().includes(search.toLowerCase()) || recipe.ingredients.some((ingredient)=> ingredient.toLowerCase().includes(search.toLowerCase()));
-                }).map((recipe)=>{
+                {search? filteredRecipes.map((recipe)=>{
+                    return(
+                    <RecipeCard key={recipe.id} recipe={recipe}/>
+                    )
+                })
+                : recipes.map((recipe)=>{
                     return(
                     <RecipeCard key={recipe.id} recipe={recipe}/>
                     )
@@ -97,7 +80,7 @@ function Recipes({recipes, loading,error, setSkip}){
             </div>
             <div className="flex p-4 rounded-lg border border-neutral-900 md:w-90  gap-8 mt-10 font-medium md:text-base text-xs text-neutral-900 divide-x divide-neutral-900 mx-auto">
                 <button className="pr-7 hover:text-orange-500 hover:cursor-pointer transition-all duration-300" onClick={previous}>Previous</button>
-                <span className="pr-7">Page {currentPage} of {totalPages || 1}</span>
+                <span className="pr-7">Page {currentPage} of {totalPages}</span>
                 <button className="hover:text-orange-500 hover:cursor-pointer transition-all duration-300" onClick={next}>Next</button>
             </div>
         </div>

@@ -10,38 +10,47 @@ import Recipe from "./components/recipe";
 function App() {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError]=useState(false);
-  const[skip, setSkip] = useState(0);
-    async function fetchRecipes(){
-        setLoading(true);
-        try{
-            const response = await fetch(`https://dummyjson.com/recipes?limit=6&skip=${skip}`);
-            const data = await response.json();
-            console.log(data)
-            setRecipes(data.recipes);
-        }
-        catch(error){
-            console.log("ERROR", error);
-            setError(true);
-        }
-        // finnaly block is executed regardless of whether the try block succeeds or the catch block is executed. It is used to perform cleanup actions or reset states after the try-catch execution.
-        finally{
-            setLoading(false);
-        }
+  const [error, setError] = useState(false);
+  const [total, setTotal] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [search, setSearch] = useState("");
+  const recipesPerPage = 6;
+  const totalPages = Math.ceil(total / recipesPerPage);
+
+  async function fetchRecipes() {
+    setLoading(true);
+    try {
+      const response = await fetch("https://dummyjson.com/recipes?limit=50");
+      const data = await response.json();
+      setTotal(data.total);
+      setRecipes(data.recipes);
+    } catch (error) {
+      console.log("ERROR", error);
+      setError(true);
+    } finally {
+      setLoading(false);
     }
-    useEffect (()=>{
-        fetchRecipes();
-    },[])
-    
-    console.log(recipes)
+  }
+
+  useEffect(() => {
+    fetchRecipes();
+  }, []);
+
+  const filteredRecipes = recipes.filter((recipe)=>{
+    return recipe.name.toLowerCase().includes(search.toLowerCase()) || recipe.ingredients.some((ingredient)=> ingredient.toLowerCase().includes(search.toLowerCase()));
+  })
+  // this one represents the skip parameter, recipesPerPage represents the limit parameter for the api
+  const startIndex = (currentPage - 1) * recipesPerPage;
+  const visibleRecipes = recipes.slice(startIndex, startIndex + recipesPerPage);
+
   return (
     <div>
       <NavBar/>
       <Routes>
         <Route path="/" element={<Home/>}/>
         <Route path="/about" element={<About/>}/>
-        <Route path="/recipes" element={<Recipes recipes={recipes} loading={loading} error={error} setSkip={setSkip}/>}/>
-        <Route path="/recipes/:id" element={<Recipe recipes={recipes}/>}/>
+        <Route path="/recipes" element={<Recipes recipes={visibleRecipes} filteredRecipes={filteredRecipes} loading={loading} error={error} currentPage={currentPage} setCurrentPage={setCurrentPage} totalPages={totalPages} search={search} setSearch={setSearch}/>}/>
+        <Route path="/recipes/:id" element={<Recipe recipes={recipes} setSearch={setSearch}/>}/>
       </Routes>
       <Footer/>
     </div>
