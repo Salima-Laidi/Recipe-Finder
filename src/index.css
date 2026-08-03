@@ -1,1 +1,55 @@
 @import "tailwindcss";
+@theme{
+    /* Neutral */
+    --color-neutral-900: #163a34;
+    --color-neutral-600: #395852;
+    --color-neutral-300: #d0dcd9;
+    --color-neutral-200: #e0e6e3;
+    --color-neutral-100: #f6f5f1;
+    --color-neutral-0: #ffffff;
+    /* Orange */
+    --color-orange-500: #fe9f6b;
+    /*  Teal */
+    --color-teal-500: #49ac9b;
+    /*  Indigo */
+    --color-indigo-500: #697ddb;
+
+}
+
+/* general styling */
+html,
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Nunito", sans-serif;
+    background: #f6f5f1;
+}
+
+/** ROOT------------------------------ */
+:root {
+  /*? Neutral */
+    --neutral-900: #163a34;
+    --neutral-600: #395852;
+    --neutral-300: #d0dcd9;
+    --neutral-200: #e0e6e3;
+    --neutral-100: #f6f5f1;
+  --neutral-0: #ffffff;
+
+  /*? Orange */
+  --orange-500: #fe9f6b;
+
+  /*? Teal */
+  --teal-500: #49ac9b;
+
+  /*? Indigo */
+  --indigo-500: #697ddb;
+}
+@layer components{
+  .link{
+    @apply text-neutral-900 font-semibold relative transition-all duration-300 text-center mb-4 md:mb-0;
+  }
+  .after{
+    @apply after:content-[''] after:absolute after:left-0 after:-bottom-1 after:w-full after:h-1 after:bg-orange-500;
+  }
+}
